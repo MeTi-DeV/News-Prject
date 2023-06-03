@@ -1,4 +1,9 @@
 <?php
+// use database\DataBase;
+
+
+require_once('database/DataBase.php');
+
 
 session_start();
 define('BASE_PATH', __DIR__);
@@ -8,15 +13,16 @@ define('DB_HOST', 'localhost');
 define('DB_NAME', 'project');
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', '');
-// helpers
+$db = new \database\DataBase();
 // Routing Function
-function uri($reservedUrl, $class, $method, $requestMethod = 'GET')
+function uri(string $reservedUrl, string $class, string $method, string $requestMethod = 'GET')
 {
     $parameters = [];
     $currentUrl = explode('?', currentUrl())[0];
     $currentUrl = str_replace(CURRENT_DOMAIN, '', $currentUrl);
     $currentUrl = trim($currentUrl, '/');
     $currentUrlArray = explode('/', $currentUrl);
+    // delete empty indexes of array
     $currentUrlArray = array_filter($currentUrlArray);
     //reserve URL
 
@@ -41,6 +47,7 @@ function uri($reservedUrl, $class, $method, $requestMethod = 'GET')
     call_user_func_array(array($object, $method), $parameters);
     exit;
 }
+// helpers
 function protocol()
 {
     return stripos(
@@ -85,6 +92,7 @@ function displayError($displayError)
         error_reporting(0);
     }
 }
+// show Messages
 global $flashMessage;
 if (isset($_SESSION['flash_message'])) {
     $flashMessage = $_SESSION['flash_message'];
